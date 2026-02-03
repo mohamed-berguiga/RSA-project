@@ -126,7 +126,7 @@ const GenerateKeysView = () => {
           </div>
 
           {/* Private Key */}
-          <div className="bg-card rounded-2xl p-4 shadow-card border border-destructive/20">
+          <div  hidden className="bg-card rounded-2xl p-4 shadow-card border border-destructive/20">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <div className="w-6 h-6 rounded-md bg-destructive/10 flex items-center justify-center">

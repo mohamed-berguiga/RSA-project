@@ -12,7 +12,6 @@ const DecryptView = () => {
   const [isDecrypting, setIsDecrypting] = useState(false);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState(false);
-  const [privateKeyInput, setPrivateKeyInput] = useState("");
 
   //Fonction d’import clé privée
   async function importPrivateKey(pem: string): Promise<CryptoKey> {
@@ -33,8 +32,8 @@ const DecryptView = () => {
   }
 
   const handleDecrypt = async () => {
-    if (!privateKeyInput.trim()) {
-      setError("Veuillez fournir votre clé privée.");
+    if (!keyPair?.privateKey) {
+      setError("Aucune clé privée disponible. Veuillez générer vos clés RSA.");
       return;
     }
 
@@ -48,12 +47,12 @@ const DecryptView = () => {
     setPlaintext("");
 
     try {
-      const privateKey = await importPrivateKey(privateKeyInput.trim());
-      const decrypted = await decryptMessage(ciphertext.trim(), privateKey);
+      // Utilisation directe de la clé privée du contexte
+      const decrypted = await decryptMessage(ciphertext.trim(), keyPair.privateKey);
       setPlaintext(decrypted);
     } catch (err) {
       setError(
-          "Échec du déchiffrement : clé privée incorrecte ou message invalide."
+          "Échec du déchiffrement : message invalide."
       );
       console.error(err);
     } finally {
@@ -132,22 +131,7 @@ const DecryptView = () => {
           <label className="block text-sm font-medium text-foreground mb-2">
             Clé privée (PEM/Base64)
           </label>
-          <Textarea
-              value={privateKeyInput}
-              onChange={(e) => setPrivateKeyInput(e.target.value)}
-              placeholder="Collez votre clé privée ici..."
-              className="min-h-[120px] bg-muted/30 border-border focus:border-primary resize-none font-mono text-sm"
-          />
-          <div className="flex items-center justify-end mt-2">
-            {privateKeyInput && (
-                <button
-                    onClick={() => setPrivateKeyInput("")}
-                    className="text-xs text-muted-foreground hover:text-foreground transition-colors"
-                >
-                  Effacer
-                </button>
-            )}
-          </div>
+
         </div>
         {/* Input Section */}
         <div className="bg-card rounded-2xl p-4 shadow-card border border-border/50">
